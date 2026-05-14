@@ -1,0 +1,8 @@
+#include "./globals.hpp"
+
+const Rectangle wall[] = {
+    {0.0f, -WALL_OFFSET, SCREEN_WIDTH, WALL_HEIGHT},
+    {0.0f, SCREEN_HEIGHT - WALL_HEIGHT + WALL_OFFSET, SCREEN_WIDTH,
+     WALL_HEIGHT},
+    {-WALL_OFFSET, 0.0f, WALL_WIDTH, SCREEN_HEIGHT},
+    {SCREEN_WIDTH - (float)WALL_OFFSET / 2, 0.0f, WALL_WIDTH, SCREEN_HEIGHT}};
