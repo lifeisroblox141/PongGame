@@ -3,26 +3,25 @@
 Player::Player(int plr_n) : Object(), plr_n(plr_n) {
         // Sets position
         if (plr_n == PLAYER_ONE) {
-                this->position.x = 0.0f + WALL_OFFSET;
+                this->geometry.x = WALL_OFFSET;
                 this->move_up = KEY_W;
                 this->move_down = KEY_S;
         } else if (plr_n == PLAYER_TWO) {
-                this->position.x = SCREEN_WIDTH - 2 * WALL_OFFSET;
+                this->geometry.x = SCREEN_WIDTH - 2 * WALL_OFFSET;
                 this->move_up = KEY_UP;
                 this->move_down = KEY_DOWN;
         }
-        this->position.y = (float)(SCREEN_HEIGHT - this->size.y) / 2;
-        this->hitbox.x = this->position.x;
-        this->hitbox.y = this->position.y;
+        // this->position.y = (float)(SCREEN_HEIGHT - this->size.y) / 2;
+        this->geometry.y = (float)(SCREEN_HEIGHT - this->geometry.height) / 2;
 }
 void Player::update(float dt) {
         float accleration = this->speed * dt;
-        if (IsKeyDown(this->move_up))
-                this->set_position(this->position.x,
-                                   this->position.y - accleration);
-        else if (IsKeyDown(this->move_down))
-                this->set_position(this->position.x,
-                                   this->position.y + accleration);
+        if (IsKeyDown(this->move_up) &&
+            !CheckCollisionRecs(this->geometry, wall[WALL_TOP]))
+                this->geometry.y -= accleration;
+        else if (IsKeyDown(this->move_down) &&
+                 !CheckCollisionRecs(this->geometry, wall[WALL_BOTTOM]))
+                this->geometry.y += accleration;
 }
 void Player::draw() {
         Color color;
@@ -30,6 +29,6 @@ void Player::draw() {
                 color = BLUE;
         else if (this->plr_n == PLAYER_TWO)
                 color = RED;
-        DrawRectangleV(this->position, this->size, color);
+        DrawRectangleRec(this->geometry, color);
         // DrawRectangleRec(this->hitbox, GREEN);
 }

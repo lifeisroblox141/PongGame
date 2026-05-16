@@ -13,6 +13,8 @@
 #define N_WALL 4
 #define WALL_TOP 0
 #define WALL_BOTTOM 1
+#define WALL_LEFT 2
+#define WALL_RIGHT 3
 
 extern const Rectangle wall[N_WALL];
 

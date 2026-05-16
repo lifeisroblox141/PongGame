@@ -21,8 +21,7 @@ class Player : public Object {
        protected:
         const float speed = 400.0f;
         const int plr_n;
-        Vector2 size = {PLR_SIZE_X, PLR_SIZE_Y};
-        Rectangle hitbox = {0.0f, 0.0f, PLR_SIZE_X, PLR_SIZE_Y};
+        Rectangle geometry = {0.0f, 0.0f, PLR_SIZE_X, PLR_SIZE_Y};
         KeyboardKey move_up;
         KeyboardKey move_down;
 };
