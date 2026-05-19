@@ -18,10 +18,11 @@ class Player : public Object {
         void update(float dt);
         void draw();
 
+        Rectangle geometry = {0.0f, 0.0f, PLR_SIZE_X, PLR_SIZE_Y};
+
        protected:
         const float speed = 400.0f;
         const int plr_n;
-        Rectangle geometry = {0.0f, 0.0f, PLR_SIZE_X, PLR_SIZE_Y};
         KeyboardKey move_up;
         KeyboardKey move_down;
 };

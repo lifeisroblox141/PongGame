@@ -8,6 +8,7 @@ target_sources(${PROJECT_NAME} PRIVATE
 	src/main.cpp
         src/globals.cpp
         src/classes/objects/player.cpp
+        src/classes/objects/ball.cpp
 )
 
 target_link_libraries(${PROJECT_NAME} PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/lib/libraylib.a")
