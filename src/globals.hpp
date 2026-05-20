@@ -3,7 +3,7 @@
 #ifndef _GLOBALS_H_
 #define _GLOBALS_H_
 
-#define SCREEN_WIDTH 480
+#define SCREEN_WIDTH 680
 #define SCREEN_HEIGHT 480
 
 #define WALL_WIDTH 15

@@ -20,7 +20,7 @@ class Player : public Object {
 
         Rectangle geometry = {0.0f, 0.0f, PLR_SIZE_X, PLR_SIZE_Y};
 
-       protected:
+       private:
         const float speed = 400.0f;
         const int plr_n;
         KeyboardKey move_up;

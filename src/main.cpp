@@ -19,12 +19,16 @@ int main() {
         Ball ba(plr1, plr2);
 
         InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, TITLE);
+
+        for (int i = 0; i < N_WALL; i++)
+                std::cout << "x:" << wall[i].x << ", y:" << wall[i].y
+                          << "; w:" << wall[i].width
+                          << ", h: " << wall[i].height << '\n';
         while (!WindowShouldClose()) {
                 float dt = GetFrameTime();
                 plr1.update(dt);
                 plr2.update(dt);
                 ba.update(dt);
-
                 BeginDrawing();
 
                 ClearBackground(BLACK);

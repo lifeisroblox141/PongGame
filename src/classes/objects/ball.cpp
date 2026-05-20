@@ -1,59 +1,60 @@
-#include "./ball.hpp"
+#include "ball.hpp"
 
 #include <raymath.h>
 
-#include <iostream>
 #include <random>
 
 #include "../../globals.hpp"
 
 #define MIN_V 0
-#define MAX_V 1
+#define MAX_V 3
+static const Vector2 directions[4] = {
+    {-1.0f, -1.0f}, {1.0f, -1.0f}, {1.0f, 1.0f}, {-1.0f, 1.0f}};
 
 static std::random_device rd;
-static std::mt19937 generator(rd());
-static std::uniform_int_distribution<> distr(MIN_V, MAX_V);
+static std::mt19937 gen(rd());
+static std::uniform_int_distribution<> distrib(MIN_V, MAX_V);
 
-static inline void check(Vector2& vec) {
-        std::cout << vec.x << ", " << vec.y << '\n';
+void Ball::set_position(Vector2& pos) {
+        this->geometry = {pos.x, pos.y};
+        this->hitbox.x = pos.x - (this->hitbox.width / 2);
+        this->hitbox.y = pos.y - (this->hitbox.height / 2);
+
+        if (this->velocity.x > 0)
+                this->hitbox.x += this->radius;
+        else if (this->velocity.x < 0)
+                this->hitbox.x -= this->radius;
 }
-
-float Ball::random_and_reseed() {
-        int ran = distr(generator);
-        generator.seed(rd());
-
-        float result = 0;
-        if (ran == MIN_V)
-                result = this->speed;
-        else if (ran == MAX_V)
-                result = -this->speed;
-        return result;
-}
-Ball::Ball(Player& plr1, Player& plr2) : Object(), plr1(plr1), plr2(plr2) {
-        this->geometry = {(float)SCREEN_WIDTH / 2, (float)SCREEN_HEIGHT / 2};
-
-        this->velocity = {this->random_and_reseed(), this->random_and_reseed()};
-        this->velocity = Vector2Normalize(this->velocity);
-        this->velocity = Vector2Scale(this->velocity, this->speed);
-        // check(this->velocity);
+Ball::Ball(const Player& plr1, const Player& plr2) : plr1(plr1), plr2(plr2) {
+        Vector2 set_middle = {(float)SCREEN_WIDTH / 2,
+                              (float)SCREEN_HEIGHT / 2};
+        this->velocity = directions[distrib(gen)];
+        this->set_position(set_middle);
 }
 void Ball::update(float dt) {
-        Vector2 c_pos = {this->geometry.x, this->geometry.y};
+        if (CheckCollisionRecs(this->hitbox, wall[WALL_LEFT]) ||
+            CheckCollisionRecs(this->hitbox, wall[WALL_RIGHT])) {
+                Vector2 set_middle = {(float)SCREEN_WIDTH / 2,
+                                      (float)SCREEN_HEIGHT / 2};
+                this->velocity = directions[distrib(gen)];
+                this->set_position(set_middle);
+                return;
+        }
 
-        if (CheckCollisionCircleRec(c_pos, this->radius, wall[WALL_TOP]) ||
-            CheckCollisionCircleRec(c_pos, this->radius, wall[WALL_BOTTOM]))
-                this->velocity.y = -this->velocity.y;
-        if (CheckCollisionCircleRec(c_pos, this->radius, wall[WALL_LEFT]) ||
-            CheckCollisionCircleRec(c_pos, this->radius, wall[WALL_RIGHT]) ||
-            CheckCollisionCircleRec(c_pos, this->radius, this->plr1.geometry) ||
-            CheckCollisionCircleRec(c_pos, this->radius, this->plr2.geometry))
-                this->velocity.x = -this->velocity.x;
+        if (CheckCollisionRecs(this->hitbox, this->plr1.geometry) ||
+            CheckCollisionRecs(this->hitbox, this->plr2.geometry))
+                this->velocity.x *= -1;
+        if (CheckCollisionRecs(this->hitbox, wall[WALL_TOP]) ||
+            CheckCollisionRecs(this->hitbox, wall[WALL_BOTTOM]))
+                this->velocity.y *= -1;
 
-        Vector2 new_pos = Vector2Add(c_pos, Vector2Scale(this->velocity, dt));
-        this->geometry.x = new_pos.x;
-        this->geometry.y = new_pos.y;
+        Vector2 new_pos = Vector2Add(
+            (Vector2){this->geometry.x, this->geometry.y},
+            Vector2Scale(Vector2Scale(this->velocity, dt), this->speed));
+        this->set_position(new_pos);
 }
 void Ball::draw() {
         DrawCircleV((Vector2){this->geometry.x, this->geometry.y}, this->radius,
                     WHITE);
+        DrawRectangleRec(this->hitbox, GREEN);
 }
