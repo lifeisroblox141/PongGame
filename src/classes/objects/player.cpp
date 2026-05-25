@@ -12,6 +12,10 @@ Player::Player(int plr_n) : Object(), plr_n(plr_n) {
                 this->move_down = KEY_DOWN;
         }
         // this->position.y = (float)(SCREEN_HEIGHT - this->size.y) / 2;
+        // this->geometry.y = (float)(SCREEN_HEIGHT - this->geometry.height) /
+        // 2;
+}
+void Player::reset() {
         this->geometry.y = (float)(SCREEN_HEIGHT - this->geometry.height) / 2;
 }
 void Player::update(float dt) {

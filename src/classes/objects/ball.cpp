@@ -25,28 +25,56 @@ void Ball::set_position(Vector2& pos) {
         else if (this->velocity.x < 0)
                 this->hitbox.x -= this->radius;
 }
-Ball::Ball(const Player& plr1, const Player& plr2) : plr1(plr1), plr2(plr2) {
+Ball::~Ball() { UnloadSound(this->pop_sound); }
+void Ball::reset() {
         Vector2 set_middle = {(float)SCREEN_WIDTH / 2,
                               (float)SCREEN_HEIGHT / 2};
         this->velocity = directions[distrib(gen)];
         this->set_position(set_middle);
+        // this->resetted = true;
+}
+Ball::Ball(const Player& plr1, const Player& plr2) : plr1(plr1), plr2(plr2) {
+        // this->reset();
+        game_resetted = true;
+
+        std::string sound_path =
+            std::string(application_dir).append("assets/Pop.ogg");
+        this->pop_sound = LoadSound(sound_path.c_str());
 }
 void Ball::update(float dt) {
-        if (CheckCollisionRecs(this->hitbox, wall[WALL_LEFT]) ||
-            CheckCollisionRecs(this->hitbox, wall[WALL_RIGHT])) {
-                Vector2 set_middle = {(float)SCREEN_WIDTH / 2,
-                                      (float)SCREEN_HEIGHT / 2};
-                this->velocity = directions[distrib(gen)];
-                this->set_position(set_middle);
+        // bool collided = false;
+        // if (IsKeyDown(KEY_SPACE)) game_resetted = false;
+
+        bool touched_wall1 = CheckCollisionRecs(this->hitbox, wall[WALL_LEFT]);
+        bool touched_wall2 = CheckCollisionRecs(this->hitbox, wall[WALL_RIGHT]);
+        if (touched_wall1 || touched_wall2) {
+                if (touched_wall1)
+                        plr2_score += this->given_score;
+                else if (touched_wall2)
+                        plr1_score += this->given_score;
+                game_resetted = true;
                 return;
         }
 
         if (CheckCollisionRecs(this->hitbox, this->plr1.geometry) ||
-            CheckCollisionRecs(this->hitbox, this->plr2.geometry))
+            CheckCollisionRecs(this->hitbox, this->plr2.geometry)) {
                 this->velocity.x *= -1;
+                PlaySound(this->pop_sound);
+        }
+
         if (CheckCollisionRecs(this->hitbox, wall[WALL_TOP]) ||
-            CheckCollisionRecs(this->hitbox, wall[WALL_BOTTOM]))
+            CheckCollisionRecs(this->hitbox, wall[WALL_BOTTOM])) {
                 this->velocity.y *= -1;
+                PlaySound(this->pop_sound);
+                // collided = true;
+        }
+
+        /*if (collided) {
+                if (this->speed > this->max_speed)
+                        this->speed = this->min_speed;
+                else
+                        this->speed += this->dt_speed;
+        }*/
 
         Vector2 new_pos = Vector2Add(
             (Vector2){this->geometry.x, this->geometry.y},
@@ -55,6 +83,6 @@ void Ball::update(float dt) {
 }
 void Ball::draw() {
         DrawCircleV((Vector2){this->geometry.x, this->geometry.y}, this->radius,
-                    WHITE);
-        DrawRectangleRec(this->hitbox, GREEN);
+                    GREEN);
+        // DrawRectangleRec(this->hitbox, GREEN);
 }

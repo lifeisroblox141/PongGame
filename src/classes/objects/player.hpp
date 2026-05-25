@@ -17,6 +17,7 @@ class Player : public Object {
         Player(int plr_n);
         void update(float dt);
         void draw();
+        void reset();
 
         Rectangle geometry = {0.0f, 0.0f, PLR_SIZE_X, PLR_SIZE_Y};
 

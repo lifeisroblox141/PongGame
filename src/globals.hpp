@@ -1,5 +1,7 @@
 #include <raylib.h>
 
+#include <string>
+
 #ifndef _GLOBALS_H_
 #define _GLOBALS_H_
 
@@ -17,5 +19,9 @@
 #define WALL_RIGHT 3
 
 extern const Rectangle wall[N_WALL];
+extern const std::string application_dir;
+extern bool game_resetted;
+extern int plr1_score;
+extern int plr2_score;
 
 #endif

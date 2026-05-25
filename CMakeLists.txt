@@ -10,16 +10,25 @@ target_sources(${PROJECT_NAME} PRIVATE
         src/classes/objects/player.cpp
         src/classes/objects/ball.cpp
 )
+add_custom_command(
+        TARGET ${PROJECT_NAME} 
+        POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_directory
+                "${CMAKE_CURRENT_SOURCE_DIR}/assets"
+                "$<TARGET_FILE_DIR:PongGame>/assets"
+        COMMENT "Copying game assets to build directory..."
+)
 
 target_link_libraries(${PROJECT_NAME} PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/lib/libraylib.a")
 
 target_link_libraries(${PROJECT_NAME} PRIVATE 
     GL 
     m 
-    pthread 
+   pthread 
     dl 
     rt 
     X11
+    asound
 )
 
 target_include_directories(${PROJECT_NAME} PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/include")
