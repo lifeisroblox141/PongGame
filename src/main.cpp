@@ -57,11 +57,11 @@ int main() {
                 ClearBackground(BLACK);
 
                 for (Rectangle w : wall) DrawRectangleRec(w, WHITE);
-                DrawRectangleRec(
+                /*DrawRectangleRec(
                     (Rectangle){(SCREEN_WIDTH - WALL_OFFSET) / 2.0f,
                                 (SCREEN_HEIGHT - (SCREEN_HEIGHT / 2.0f)) / 2.0f,
                                 WALL_OFFSET, SCREEN_HEIGHT / 2.0f},
-                    WHITE);
+                    WHITE);*/
 
                 std::string label1 = "PLR1: ";
                 label1.append(std::to_string(plr1_score));

@@ -22,8 +22,11 @@ class Ball : public Object {
         // const float dt_speed = 50.0f;
         // bool resetted = false;
         Sound pop_sound;
+        // Image ball_img;
+        Texture2D texture;
         const float speed = 300.0f;
         const float radius = 20.0f;
+        const float img_wh = 20.0f * 2;
         Rectangle hitbox = {0.0f, 0.0f, 10.0f, 50.0f};
         Vector2 velocity = {0.0f, 0.0f};
 

@@ -25,7 +25,11 @@ void Ball::set_position(Vector2& pos) {
         else if (this->velocity.x < 0)
                 this->hitbox.x -= this->radius;
 }
-Ball::~Ball() { UnloadSound(this->pop_sound); }
+Ball::~Ball() {
+        UnloadSound(this->pop_sound);
+        UnloadTexture(this->texture);
+        // UnloadImage(this->ball_img);
+}
 void Ball::reset() {
         Vector2 set_middle = {(float)SCREEN_WIDTH / 2,
                               (float)SCREEN_HEIGHT / 2};
@@ -40,6 +44,13 @@ Ball::Ball(const Player& plr1, const Player& plr2) : plr1(plr1), plr2(plr2) {
         std::string sound_path =
             std::string(application_dir).append("assets/Pop.ogg");
         this->pop_sound = LoadSound(sound_path.c_str());
+
+        std::string tex_path =
+            std::string(application_dir).append("assets/Ball.png");
+        Image img = LoadImage(tex_path.c_str());
+        ImageResize(&img, (int)this->img_wh, (int)this->img_wh);
+        this->texture = LoadTextureFromImage(img);
+        UnloadImage(img);
 }
 void Ball::update(float dt) {
         // bool collided = false;
@@ -82,7 +93,11 @@ void Ball::update(float dt) {
         this->set_position(new_pos);
 }
 void Ball::draw() {
-        DrawCircleV((Vector2){this->geometry.x, this->geometry.y}, this->radius,
-                    GREEN);
+        /*DrawCircleV((Vector2){this->geometry.x, this->geometry.y},
+           this->radius, GREEN);*/
+        DrawTextureV(this->texture,
+                     (Vector2){this->geometry.x - (this->img_wh / 2.0f),
+                               this->geometry.y - (this->img_wh / 2.0f)},
+                     WHITE);
         // DrawRectangleRec(this->hitbox, GREEN);
 }

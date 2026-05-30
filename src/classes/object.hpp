@@ -14,6 +14,7 @@ class Object {
         /*Vector2 position = {0.0f, 0.0f};
         Vector2 size = {0.0f, 0.0f};*/
         Rectangle geometry = {0.0f, 0.0f};
+        Texture2D texture;
 };
 
 #endif
